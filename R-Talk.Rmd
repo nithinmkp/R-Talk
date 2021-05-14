@@ -1,0 +1,105 @@
+---
+title: "A Sneak Peek in to R for Economics Research "
+subtitle:   
+author: 
+  - "Nithin M"
+date: '16 May,2021'
+output:
+  xaringan::moon_reader:
+    css: ["default", "metropolis-fonts", "new_css.css"]
+    seal: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+      beforeInit: "macros.js"
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+      
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  fig.show = TRUE,
+  hiline = TRUE
+)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo(
+  primary_color = "#035AA6", secondary_color = "#03A696",
+  inverse_header_color = "#FFFFFF",
+  link_color = "#8d99ae",
+  inverse_link_color = "#edf2f4"
+)
+```
+```{r Libraries,include=FALSE}
+packages<-c("tidyverse","data.table","fontawesome","DT","xaringanExtra","here","icons")
+sapply(packages,library,character.only=T)
+xaringanExtra::use_tachyons()
+xaringanExtra::use_webcam()
+xaringanExtra::use_tile_view()
+xaringanExtra::use_panelset()
+style_panelset_tabs(foreground = "#2d6a4f", background = "#fefae0")
+
+```
+```{r meta, echo=FALSE}
+library(metathis)
+meta() %>%
+  meta_general(
+    description = "Some tips and tricks for economists",
+    generator = "xaringan and remark.js"
+  ) %>% 
+  meta_name("github-repo" = "nithinmkp/Lightning-talk-pune") %>% 
+  meta_social(
+    title = "Lightning Talk",
+    og_author = "Nithin M"
+  )
+```
+class: left, top, container
+background-image: url("Aw9opB8.png")
+background-size: 95%
+---
+name: about-me
+layout: false
+class: about-me-slide, inverse, middle, center
+
+# About Me
+
+<img style="border-radius: 60%;" img src="img1.jpeg" width="150px"/>
+
+### Nithin M
+ Doctoral Student, Economics
+
+.fade[Indian Institute of Technology-Kharagpur]
+
+[`r icons::icon_style(fontawesome("twitter"),fill="white")` @nithin_eco](https://twitter.com/nithin_eco) 
+[`r icons::icon_style(icons::fontawesome("github"), scale = 1,fill="white")` @nithinmkp](https://github.com/nithinmkp)
+---
+# Acknowledgements
+- [`r icons::fontawesome("linkedin")` Naveen Hari, MA, SNU]()
+- [`r icons::fontawesome("linkedin")` Baiju P, PHD, NIT-Goa]()
+- [`r icons::fontawesome("linkedin")` Alan Seemon, MSc. , MSE]()
+- [`r icons::fontawesome("linkedin")` Nandu S, MA, JNU]()
+
+.pull-left[.center[
+`r icons::icon_style(icons::fontawesome("smile"), scale = 3, color = "#ee9b00")`]]
+
+.pull-right[
+- [xaringan `r emo::ji("package")`](https://github.com/yihui/xaringan#xaringan) developed by Yihui Xie
+- [xaringanExtra `r emo::ji("package")`](https://github.com/gadenbuie/xaringanExtra/#xaringanExtra) developed by Garrick Aden-Buie
+- Workshop on Xaringan by [Silvia P. Canelón](https://silvia.rbind.io/) 
+]
+-
