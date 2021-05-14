@@ -89,7 +89,7 @@ class: about-me-slide, inverse, middle, center
 [`r icons::icon_style(icons::fontawesome("github"), scale = 1,fill="white")` @nithinmkp](https://github.com/nithinmkp)
 ---
 # Acknowledgements
-- [`r icons::fontawesome("linkedin")` Naveen Hari, MA, SNU]()
+- [`r icons::fontawesome("linkedin")` Naveen Hari, MA, SNU](https://www.linkedin.com/in/econaveenhari)
 - [`r icons::fontawesome("linkedin")` Baiju P, PHD, NIT-Goa]()
 - [`r icons::fontawesome("linkedin")` Alan Seemon, MSc. , MSE]()
 - [`r icons::fontawesome("linkedin")` Nandu S, MA, JNU]()
