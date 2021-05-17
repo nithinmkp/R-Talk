@@ -74,7 +74,7 @@ background-size: 95%
 ---
 name: about-me
 layout: false
-class: about-me-slide, inverse, middle, center
+class: about-me-slide, middle, center
 
 # About Me
 
@@ -90,9 +90,10 @@ class: about-me-slide, inverse, middle, center
 ---
 # Acknowledgements
 - [`r icons::fontawesome("linkedin")` Naveen Hari, MA, SNU](https://www.linkedin.com/in/econaveenhari)
-- [`r icons::fontawesome("linkedin")` Baiju P, PHD, NIT-Goa]()
-- [`r icons::fontawesome("linkedin")` Alan Seemon, MSc. , MSE]()
-- [`r icons::fontawesome("linkedin")` Nandu S, MA, JNU]()
+- [`r icons::fontawesome("linkedin")` Baiju P, PHD, NIT-Goa](https://www.linkedin.com/in/baiju-pallayil-445754151)
+- [`r icons::fontawesome("linkedin")` Alan Seemon, MSc. , MSE](https://www.linkedin.com/in/alan-seemon)
+- [`r icons::fontawesome("linkedin")` Nandu S, MA, JNU](https://www.linkedin.com/in/nandu-s-nair-08a861136)
+- [Economiga](https://www.economiga.xyz/)
 
 .pull-left[.center[
 `r icons::icon_style(icons::fontawesome("smile"), scale = 3, color = "#ee9b00")`]]
@@ -102,4 +103,157 @@ class: about-me-slide, inverse, middle, center
 - [xaringanExtra `r emo::ji("package")`](https://github.com/gadenbuie/xaringanExtra/#xaringanExtra) developed by Garrick Aden-Buie
 - Workshop on Xaringan by [Silvia P. Canelón](https://silvia.rbind.io/) 
 ]
--
+---
+class: center,section-slide
+
+# About You
+--
+.left[
+## R enthusiasts
+]
+--
+.left[
+## Economics students (Most probably)
+]
+--
+.left[
+## Practitioners
+]
+
+--
+.left[
+## Know the possibilities in R
+]
+---
+class: inverse,center, middle
+
+# A cool thing called 
+```{r rlogo,warning=F,message=F,echo=F,out.width="30%"}
+knitr::include_graphics("Rlogo.svg")
+```
+---
+# What this talk is about??
+- Why use R?
+- Scope of R in Economics Research
+- Other languages/packages
+- Possibilities in R (Not exhaustive in any sense)
+---
+# Why R for economics??
+
+### Pros
+- R is Free
+- Written with statisticians in mind
+- Vectorised language
+- Most up to date econometric techniques
+
+### Cons
+- steep learning curve
+---
+```{r num2word, echo=F,message=F,warning=F}
+library(xfun)
+library(glue)
+```
+# `r glue("{n2w(5,cap=T)}")` facets of this talk
+
+--
+1. Data Cleaning
+    - RBI Data
+    - CMIE Data
+--
+2. Regressions
+    - Multi-group regressions
+    - Standard Error Adjustments
+--
+3. Time series
+    - Unit root tests
+--
+4. Plots
+    - Regression plots
+    - Correlation plots
+--
+5. Communication / Reporting
+    - Publication quality tables
+    - Word output
+    - Rmarkdown Reports
+
+---
+# Data cleaning 
+- tidy data
+- missing values
+- outliers
+- duplicates
+
+Data cleaning takes approximately 80% of the time of an analysis
+
+We take two example datasets already provided in the website
+---
+# Example (Non tidy data)
+```{r,include=F,echo=F}
+library(tidyr)
+```
+```{r data_eg, paged.print=TRUE}
+relig_income %>% head(13)
+```
+
+---
+# Tidy data
+```{r data-tidy,message=F,warning=F}
+relig_income %>% 
+  pivot_longer(-religion, names_to = "income", values_to = "frequency")
+```
+
+---
+class: imp_slide, center,middle
+
+# Live coding
+`r icons::icon_style(icons::fontawesome("code"), scale = 3, color = "#122140")`
+---
+# Regressions
+- pervasive (Not limited to economics)
+- explore/analyse causal relationships
+
+I will demonstrate **Linear regressions** only
+
+We will see how to scale up doing regressions
+
+We will also see standard error adjustments
+
+---
+class: imp_slide, center,middle
+# Live coding
+`r icons::icon_style(icons::fontawesome("code"), scale = 3, color = "#122140")`
+---
+# Time series
+- discipline in itself
+- an art and science
+- Time series data are everywhere
+- Applications in forecasting, macroeconomic analysis
+
+I will show only a tip of this iceberg. 
+
+.bigger[.center[**Unit root tests** are fundemental to any time series analysis technique]]
+---
+class: imp_slide, center,middle
+# Live coding
+`r icons::icon_style(icons::fontawesome("code"), scale = 3, color = "#122140")`
+---
+# Plots
+- important aid in EDA
+- More appealing
+- important component of analysis, reports etc
+---
+class: imp_slide, center,middle
+# Live coding
+`r icons::icon_style(icons::fontawesome("code"), scale = 3, color = "#122140")`
+---
+# Communication
+
+- Publication Quality Tables
+- Reports
+---
+# in a nutshell
+- R as a one-all solution
+- Better than using many suites 
+---
+class: imp_slide,center,middle
+# Thank You
