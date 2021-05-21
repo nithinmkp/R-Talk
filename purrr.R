@@ -90,3 +90,5 @@ nm_list<-map2(nm1,nm2,rbind)
 df_list1<-map2(df_list1,nm_list,~rename_fn(.x,c(2,4),.y))
 
 
+## Mutate columns
+map(df_list1,~.x %>% mutate(across(2:3,~.x*2,.names = "{.col}_{.fn}")))
