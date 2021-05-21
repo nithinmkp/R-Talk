@@ -44,7 +44,15 @@ map(
   }
 )
 
-rename_fn <- function(df, col_ind, new_names) {
+rename_fn <- function(df, col_ind = NULL, new_names, colname = NULL) {
+  if (!is.null(colname) & !is.null(col_ind)) {
+    stop("Either column name or column index only")
+  }
+  else if (!is.null(colname)) {
+    col_ind <- which(names(df) == colname)
+  }
+  
+  
   names(df)[col_ind] <- new_names
   return(df)
 }
@@ -58,6 +66,10 @@ df_list1 %>% reduce(left_join, by = "A")
 
 # 5) Renaming dataframes by name of a column of a dataframe
 df_list1 <- df_list1 %>% set_names(map_chr(., ~ names(.x)[3]))
+
+# Renaming columns of a dataframe by a name of dataframe
+df_list1<-df_list1 %>% map2(.,names(df_list1),
+                            ~rename_fn(.x,col_ind = 2,new_names = .y))
 
 
 # 6) Conversion of character column to numeric
