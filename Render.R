@@ -31,6 +31,24 @@ walk2(paths2,params2,~rmarkdown::render("Reporting.Rmd",output_file = .x,
                                       params = .y))
 
 
+#One more way
+
+render_report <- function(species,category) {
+        rmarkdown::render(
+                "Reporting.Rmd", params = list(
+                        species=species,
+                        category=category
+                ),
+                output_file = glue("Reports/Report-{species}-{category}.pdf")
+        )
+}
+
+for(i in species){
+        for( j in category){
+                render_report(i,j)
+        }
+}
+
 #Multiple parameter- Another way (General)
 category<-data %>% select(where(is.factor)) %>% select(-1) %>% names()
 paths2<-list.expand(species,category) %>% list.stack() %>% unite(sep = "-",col = "path",remove = T) %>% 
