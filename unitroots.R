@@ -8,7 +8,11 @@ unit_tests<-function(x){
         )
 }
 
-unitroot_fn<-function(x){
+unitroot_fn<-function(x,ncols,ind=1){
+        if(ncol(x)==ncols+1){
+                x<-x[,-ind]
+                
+        }
         r1<-map(x,~unit_tests(.x)) %>% map(bind_rows)
         methods<-map_dfr(r1,"method")
         methods<-methods[,1,drop=T]
