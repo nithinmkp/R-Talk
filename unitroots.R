@@ -21,7 +21,7 @@ unitroot_fn<-function(x,ncols,ind=1){
                 select(-alternative,
                        "Lag-length"=parameter) %>% 
                 pivot_wider(names_from = "method",
-                            values_from = c("statistic","p.value","parameter"),
+                            values_from = c("statistic","p.value","Lag-length"),
                             names_glue = "{method}_{.value}") %>% 
                 select(Variable,starts_with(methods))
         return(r2)
