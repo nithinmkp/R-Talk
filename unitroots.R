@@ -18,7 +18,8 @@ unitroot_fn<-function(x,ncols,ind=1){
         methods<-methods[,1,drop=T]
         r2<-r1  %>% 
                 map_df(bind_rows,.id = "Variable")%>% 
-                select(-alternative) %>% 
+                select(-alternative,
+                       "Lag-length"=parameter) %>% 
                 pivot_wider(names_from = "method",
                             values_from = c("statistic","p.value","parameter"),
                             names_glue = "{method}_{.value}") %>% 
