@@ -6,7 +6,8 @@ library(broom)
 unit_tests<-function(x){
         
         list("ADF"=adf.test(x) %>% tidy() ,
-             "PP"=pp.test(x) %>% tidy()
+             "PP"=pp.test(x) %>% tidy(),
+             "KPSS"=kpss.test(x) %>% tidy()
         )
 }
 
