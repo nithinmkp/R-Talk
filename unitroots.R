@@ -52,13 +52,13 @@ ts_fn <- function(df, cols, order = 1) {
                 map_dfc(bind_cols) %>%
                 setNames(paste0("diff_", varnames))
         
-        df <- as_tibble(df)
+        df <- as_tibble(df[,-1])
         ln_df <- df %>% select(starts_with("ln"))
         df <- df %>% select(-starts_with("ln"))
         
         
         lst <- list(
-                levels = df[,-1],
+                levels = df,
                 log_levels = ln_df,
                 diff = diff_lst
         )
