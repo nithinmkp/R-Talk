@@ -58,7 +58,7 @@ ts_fn <- function(df, cols, order = 1) {
         
         
         lst <- list(
-                levels = df,
+                levels = df[,-1],
                 log_levels = ln_df,
                 diff = diff_lst
         )
