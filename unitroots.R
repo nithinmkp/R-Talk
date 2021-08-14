@@ -1,22 +1,30 @@
-
+library(tseries)
+library(tidyverse)
+library(broom)
 # Unit root tests-Table ---------------------------------------------------
 
 unit_tests<-function(x){
         
         list("ADF"=adf.test(x) %>% tidy() ,
-             "PP"=pp.test(x) %>% tidy()
+             "PP"=pp.test(x) %>% tidy(),
+             "KPSS"=kpss.test(x) %>% tidy()
         )
 }
 
-unitroot_fn<-function(x){
+unitroot_fn<-function(x,ncols,ind=1){
+        if(ncol(x)==ncols+1){
+                x<-x[,-ind]
+                
+        }
         r1<-map(x,~unit_tests(.x)) %>% map(bind_rows)
         methods<-map_dfr(r1,"method")
         methods<-methods[,1,drop=T]
         r2<-r1  %>% 
                 map_df(bind_rows,.id = "Variable")%>% 
-                select(-alternative) %>% 
+                select(-alternative,
+                       "Lag-length"=parameter) %>% 
                 pivot_wider(names_from = "method",
-                            values_from = c("statistic","p.value","parameter"),
+                            values_from = c("statistic","p.value","Lag-length"),
                             names_glue = "{method}_{.value}") %>% 
                 select(Variable,starts_with(methods))
         return(r2)
@@ -44,7 +52,7 @@ ts_fn <- function(df, cols, order = 1) {
                 map_dfc(bind_cols) %>%
                 setNames(paste0("diff_", varnames))
         
-        df <- as_tibble(df)
+        df <- as_tibble(df[,-1])
         ln_df <- df %>% select(starts_with("ln"))
         df <- df %>% select(-starts_with("ln"))
         
