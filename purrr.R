@@ -3,7 +3,8 @@ library(glue)
 
 ## Purrr-Examples
 df_function <- function(n) {
-  df <- data.frame(A = sample(n), runif(n), runif(n), rbinom(n, 2, .2))
+  df <- data.frame(A = sample(n), runif(n), runif(n), rbinom(n, 2, .2)) %>% 
+    tibble(.name_repair = "unique")
   names(df)[-1] <- sample(LETTERS[-1], 3)
   return(df)
 }
@@ -59,6 +60,7 @@ rename_fn <- function(df, col_ind = NULL, new_names, colname = NULL) {
 
 map(df_list1, ~ rename_fn(.x, col_ind = col_indices, new_names = col_names))
 map(df_list1, ~ .x %>% rename_fn(col_ind = col_indices, new_names = col_names))
+df_list1 %>% map(.,~rename_with(.,~col_names,c(1,2)))
 
 
 # 4) merging dataframes
