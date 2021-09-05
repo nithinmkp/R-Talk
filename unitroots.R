@@ -43,7 +43,7 @@ ts_fn <- function(df, cols, order = 1) {
         }
         
         diff_lst <- df %>%
-                select(varnames) %>%
+                dplyr::select(varnames) %>%
                 map(diff_fn) %>%
                 map(bind_cols) %>%
                 map_dfc(bind_cols) %>%
