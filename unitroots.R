@@ -18,12 +18,12 @@ unitroot_fn<-function(x){
         methods<-methods[,1,drop=T]
         r2<-r1  %>% 
                 map_df(bind_rows,.id = "Variable")%>% 
-                select(-alternative,
+                dplyr::select(-alternative,
                        "Lag-length"=parameter) %>% 
                 pivot_wider(names_from = "method",
                             values_from = c("statistic","p.value","Lag-length"),
                             names_glue = "{method}_{.value}") %>% 
-                select(Variable,starts_with(methods))
+                dplyr::select(Variable,starts_with(methods))
         return(r2)
         
 }
@@ -35,7 +35,7 @@ ts_fn <- function(df, cols, order = 1) {
                 df <- mutate(df, "ln_{col}" := log(get(col)))
         }
         varnames <- df %>%
-                select(cols, starts_with("ln")) %>%
+                dplyr::select(cols, starts_with("ln")) %>%
                 names()
         
         diff_fn <- function(x) {
@@ -50,8 +50,8 @@ ts_fn <- function(df, cols, order = 1) {
                 setNames(paste0("diff_", varnames))
         
         df <- as_tibble(df[,-1])
-        ln_df <- df %>% select(starts_with("ln"))
-        df <- df %>% select(-starts_with("ln"))
+        ln_df <- df %>% dplyr::select(starts_with("ln"))
+        df <- df %>% dplyr::select(-starts_with("ln"))
         
         
         lst <- list(
