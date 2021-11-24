@@ -58,5 +58,8 @@ params2<-list.expand(species,category) %>% map(setNames,c("species","category"))
 walk2(paths2,params2,~rmarkdown::render("Reporting.Rmd",output_file = .x,
                                         params = .y))
 
-cbind(paths2,params2)
-pwalk("Reporting.Rmd",list(cbind(paths2,params2)))
+df<-tibble(output_file=paths2,
+           params=params2)
+pwalk(df,rmarkdown::render,input="Reporting.Rmd")
+
+

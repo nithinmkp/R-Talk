@@ -1,0 +1,199 @@
+---
+title: "A report for `r params$species`"
+author:
+  - Nithin M^[Indian Institute of Technology-Kharagpur, write2nithinm@iitkgp.ac.in]
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: 
+  pdf_document:
+    number_sections: true
+params:
+  species: Adelie
+  category: sex
+  
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r library, message=TRUE, include=FALSE, paged.print=TRUE}
+library(gapminder)
+library(tidyverse)
+library(kableExtra)
+library(palmerpenguins)
+data<-penguins
+head(data,15)
+```
+# Data
+Let's have a look at the penguins dataset. The dataset contains the details of **`r nrow(data)`** penguins. The dataset contains details for `r n_distinct(data$species)` species of penguins. Let us look at the data for **`r params$species`**.
+
+```{r chunk 1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+library(skimr)
+library(stargazer)
+library(gt)
+library(kableExtra)
+library(flextable)
+
+
+data_species<- data%>% filter(species==params$species) 
+data_species%>% head(30) %>% gt()
+```
+
+# Summary Statistics
+Now that we have the data, Lets see some summary statistics.
+
+```{r summary, echo=FALSE, message=FALSE, warning=FALSE}
+library(psych)
+library(glue)
+library(epoxy)
+
+st1<-data_species %>% select_if(is.numeric) %>% select(-year) %>% skim() %>% 
+        select(Variable=skim_variable, Mean=numeric.mean,
+               "Std.Deviation"=numeric.sd,Median=numeric.p50)
+st1 %>% gt()
+st1<-st1 %>% mutate(Units=c("mm","mm","mm","g"))
+```
+
+
+We observe that
+```{glue , sum-species, eval=FALSE}
+-  {Variable} has a mean of {round(Mean,3)} {Units}, standard deviation of {round(Std.Deviation,3)} and Median of {Median}.
+```
+
+```{glue ref.label="sum-species", data = st1}
+```
+
+# Plots
+Plots are fundamental in exploratory data analysis and also a visual aid in communication.Let us create some plots
+
+## Box plot
+A box and whisker plot—also called a box plot—displays the five-number summary of a set of data. The five-number summary is the minimum, first quartile, median, third quartile, and maximum. In a box plot, we draw a box from the first quartile to the third quartile.
+
+```{r boxplot, echo=FALSE}
+library(ggtext)
+ bp<-data_species %>% drop_na() %>% 
+        ggplot(aes(x=get(params$category),y=flipper_length_mm,fill=get(params$category)))+
+        geom_boxplot()+
+        coord_flip()+
+        labs(title = glue("{params$category} wise variation in flipper length of {params$species}"),x=glue("{params$category}"),
+             y="Flipper length (in mm)",
+             fill=glue("{params$category}"))+
+        geom_jitter(size=0.8,
+                    color="dodgerblue",alpha=0.5)+
+   ggthemes::theme_clean()
+bp
+```
+```{r check, echo=FALSE, message=FALSE, warning=FALSE}
+
+bp1<-ggplot_build(bp)
+bp_stats<-bp1$data[[1]]
+if(length(bp_stats$group)==1){
+  great<-which(levels(bp1$plot$data[,"island",drop=T])==
+                 unique(bp1$plot$data[,"island",drop=T]))
+}else
+  {
+great<-which(bp_stats$middle==max(bp_stats$middle))
+}
+cat_great<-levels(data_species[,glue("{params$category}"),drop=T])
+
+```
+```{r echo=FALSE,comment=NA}
+
+if(params$category=="sex"){
+ res<-str_glue("We observe that {cat_great[great]} penguins of {params$species} have greater flipper length")
+} else if (params$category=="island"){
+res<-str_glue("We observe that  penguins of {params$species} living in {cat_great[great]} island have greater flipper length")
+}
+
+```
+
+`r res`
+
+### Density plots
+Let us create density plot as well
+
+```{r density,echo=FALSE,message=F,warning=F}
+data_species%>% 
+        ggplot(aes(x=body_mass_g,
+                   fill=get(params$category)))+
+        geom_density(
+                     size=0.8,
+                     alpha=0.4)+
+        labs(title=glue("Body mass distribution of {params$species}"),
+             subtitle = "Be careful about NA",
+             x="Body mass in grams",
+             y="Density",
+             fill=glue("{params$category}"))+
+        theme_bw()+
+        theme(title = element_text(face = "italic",
+                                   colour="dodgerblue"))+
+        scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+```
+
+## Scatter plot
+
+Let us investigate some relationships between the variables.
+
+### Bill length v/s Flipper length by sex
+```{r scatter plot, echo=FALSE, message=FALSE, warning=FALSE}
+data_species %>% drop_na()%>% ggplot(aes(x=bill_length_mm,
+                   y=flipper_length_mm,
+                   color=sex))+
+        geom_point()+theme_bw()+
+        labs(title = glue("Scatter plot for {params$species}"))
+
+```
+Let us see some more relationships.
+
+```{r ggpairs, echo=FALSE, message=FALSE, warning=FALSE}
+library(GGally)
+data_pairs<-data_species%>% drop_na()%>% select(-c(sex,species,island)) %>% 
+        ggpairs()+
+        labs(title = glue("Different relationships for {params$species}"))+
+        theme_bw()
+```
+### Correlation 
+Correlation is a statistical measure that expresses the extent to which two variables are linearly related (meaning they change together at a constant rate).
+
+```{r cor_matrix, echo=FALSE, message=FALSE, warning=FALSE}
+library(corrr)
+cor_mat<-data_species %>% drop_na() %>% select(-c(sex,species,island)) %>% 
+        correlate %>% mutate_if(is.numeric,round,3) 
+cor_mat %>% gt()
+```
+we can observe that the correlation between bill length and flipper length of `r params$species` is `r cor_mat$flipper_length_mm[1]`
+
+Again, picture is more appealing
+```{r corr_plot, echo=FALSE, message=FALSE, warning=FALSE}
+library(patchwork)
+species_plot<-data_species %>% drop_na()%>% select(-c(sex,species,island)) %>% 
+        ggcorr(label = T,angle=-45,
+               label_alpha = 0.2,
+               low="violetred2",
+               mid="linen",
+               high = "steelblue1")
+```
+```{r corr_plot_sp, echo=FALSE, message=FALSE, warning=FALSE}
+wrap_plots(species_plot)
+```
+
+But this is only for `r params$species`. What if we need a plot for all species?
+```{r corrPlt full, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggpubr)
+
+data_split<-split(data,data$species)
+names_species<-names(data_split)
+plot3<- map2(data_split,names(data_split),~.x %>%select(-c(sex,species,island)) %>% 
+             ggcorr(label = T,angle=-45,
+                    label_alpha = 0.2,
+                    low="violetred2",
+                    mid="linen",
+                    high = "steelblue1")+
+              labs(title = .y))
+
+```
+
+```{r plots_final, echo=FALSE, message=FALSE, warning=FALSE}
+wrap_plots(plot3,nrow = 2)
+```
+
