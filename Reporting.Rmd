@@ -21,6 +21,9 @@ library(gapminder)
 library(tidyverse)
 library(kableExtra)
 library(palmerpenguins)
+library(epoxy)
+library(glue)
+use_epoxy_glue_engine()
 data<-penguins
 head(data,15)
 ```
@@ -44,8 +47,6 @@ Now that we have the data, Lets see some summary statistics.
 
 ```{r summary, echo=FALSE, message=FALSE, warning=FALSE}
 library(psych)
-library(glue)
-library(epoxy)
 
 st1<-data_species %>% select_if(is.numeric) %>% select(-year) %>% skim() %>% 
         select(Variable=skim_variable, Mean=numeric.mean,

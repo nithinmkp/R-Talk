@@ -1,5 +1,6 @@
 library(gapminder)
 library(tidyverse)
+library(broom)
 library(dotwhisker)
 
 

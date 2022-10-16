@@ -2,6 +2,7 @@
 library(glue)
 library(rlist)
 library(tidyverse)
+library(palmerpenguins)
 dir.create("Reports")
 rmarkdown::render(input = "Reporting.Rmd",
                   params = list(species="Gentoo"),
@@ -30,7 +31,7 @@ params2<-cross2(species,category) %>% map(setNames,c("species","category"))
 walk2(paths2,params2,~rmarkdown::render("Reporting.Rmd",output_file = .x,
                                       params = .y))
 
-
+tibble(spec)
 #One more way
 
 render_report <- function(species,category) {
@@ -50,7 +51,7 @@ for(i in species){
 }
 
 #Multiple parameter- Another way (General)
-category<-data %>% select(where(is.factor)) %>% select(-1) %>% names()
+category<-penguins %>% select(where(is.factor)) %>% select(-1) %>% names()
 paths2<-list.expand(species,category) %>% list.stack() %>% unite(sep = "-",col = "path",remove = T) %>% 
         map(~paste0("Reports/",.x,".pdf")) %>% flatten()
 
@@ -62,4 +63,7 @@ df<-tibble(output_file=paths2,
            params=params2)
 pwalk(df,rmarkdown::render,input="Reporting.Rmd")
 
-
+#improved pwalk
+crossing(species=unique(penguins$species),
+         category=names(Filter(is.factor,penguins))[-1]) |>
+        pwalk(render_report)
